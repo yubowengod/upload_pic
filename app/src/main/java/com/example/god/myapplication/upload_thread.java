@@ -21,7 +21,7 @@ import java.util.List;
 public class upload_thread extends Thread{
 
     public String SERVICE_NAMESPACE = "http://tempuri.org/";
-    private static String SERVICE_URL = "http://192.168.1.102:8011/Service1.asmx";
+//    private static String SERVICE_URL = "http://192.168.1.102:8011/Service1.asmx";
     private String methodName = "FileUploadImage ";   //设置方法名  FileUploadImage
     private SoapObject result;
     private ListView listView;
@@ -61,7 +61,7 @@ public class upload_thread extends Thread{
         // 调用 的方法
         String methodName = "FileUploadImage";
         // 创建HttpTransportSE传输对象
-        HttpTransportSE ht = new HttpTransportSE(SERVICE_URL);
+        HttpTransportSE ht = new HttpTransportSE(Data_up.getSERVICE_URL());
         try {
             ht.debug = true;
             // 使用SOAP1.1协议创建Envelop对象

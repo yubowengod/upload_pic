@@ -10,6 +10,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +20,21 @@ import android.widget.Toast;
 
 import org.kobjects.base64.Base64;
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.MarshalBase64;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,8 +42,15 @@ public boolean isSussess;
 
     private TextView txt_flag;
     public Handler handler1;
+
+    int i=2;
     public upload_thread mythread_upload;
+
+    private SoapObject request;
+
     private Button upload;
+    private Button upload1;
+
     private ImageView image;
     private static final String NAMESPACE ="http://tempuri.org/"; //http://tempuri.org/
     // WebService地址
@@ -48,10 +62,16 @@ public boolean isSussess;
     private final int IMAGE_CODE = 0;
     EditText text;
 
+    private ExecutorService executorService;//定义一个线程池
+
+//    test
+//    test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         Button makePhoto;
         Button select;
@@ -60,44 +80,49 @@ public boolean isSussess;
 
         makePhoto=(Button)this.findViewById(R.id.makephoto);
         upload=(Button)this.findViewById(R.id.upload);
+        upload1=(Button)this.findViewById(R.id.upload1);
 
         txt_flag=(TextView)findViewById(R.id.txt_flag);
+
+//test
+        executorService = Executors.newFixedThreadPool(5);//开启5个线程，其实根据你的情况，一般不会超过8个
+
+
+        upload1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executorService.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        test_mul.getImageromSdk();
+                    }
+                });
+
+            }
+        });
+
         upload.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+                    handler1=new Handler(){
+                        @Override
+                        public void handleMessage(Message msg) {
 
-
-
-
-                handler1=new Handler(){
-                    @Override
-                    public void handleMessage(Message msg) {
-
-                        if(msg.what==0x12345){    //更新UI或其他操作
-
+                            if(msg.what==0x12345){    //更新UI或其他操作
 //                            String mythread_upload_flag =   mythread_upload.getList_result();
-                            txt_flag.setText( mythread_upload.getList_result());
-
-
-
-
+                                txt_flag.setText( mythread_upload.getList_result());
+                            }
                         }
-                    }
-                };
+                    };
 
-                String str = testUpload();
+                    String str = testUpload();
 
-                mythread_upload=new upload_thread("FileUploadImage",handler1);
-                mythread_upload.setFileUploadImage_str(str);
-                mythread_upload.start();
-
-
-
-
-
-
-
+                    mythread_upload=new upload_thread("FileUploadImage",handler1);
+                    mythread_upload.setFileUploadImage_str(str);
+                    mythread_upload.start();
             }
 
 
@@ -181,6 +206,8 @@ public boolean isSussess;
                 int second=ca.get(Calendar.SECOND);//秒
                 String fileName=String.valueOf(year)+String.valueOf(month)+String.valueOf(day)+String.valueOf(hour)+String.valueOf(minute)+String.valueOf(second);
                 PhotoName="/mnt/sdcard/"+String.valueOf(year)+String.valueOf(month)+String.valueOf(day)+String.valueOf(hour)+String.valueOf(minute)+String.valueOf(second)+".jpg";
+
+
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment
@@ -223,5 +250,10 @@ public boolean isSussess;
             }
         }
     }
+
+
+
+
+
 }
 
