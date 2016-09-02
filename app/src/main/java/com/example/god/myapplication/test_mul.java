@@ -67,6 +67,8 @@ public class test_mul {
             imageList.add(fileName3);
             imageList.add(fileName4);
             imageList.add(fileName5);
+            imageList.add(fileName5);
+            imageList.add(fileName5);
 
 
             for (int i = 0; i < imageList.size(); i++) {
@@ -84,6 +86,7 @@ public class test_mul {
                 getImageFromAndroid(methodName,imageList.get(i), uploadBuffer);   //调用webservice
                 Log.i("connectWebService", "start");
                 fis.close();
+//                System.gc();
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -118,6 +121,7 @@ public class test_mul {
                 String resuly_back ;
                 resuly_back = result.getProperty(0).toString();//true
 //                 insetinfo_result;= resuly_back;
+                Log.i("进入端口方法", resuly_back);
             }
         } catch (SoapFault e) {
             // TODO Auto-generated catch block

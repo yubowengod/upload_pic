@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +49,7 @@ public boolean isSussess;
     public upload_thread mythread_upload;
 
     private SoapObject request;
-
+    private ProgressBar pb_progressbar;
     private Button upload;
     private Button upload1;
 
@@ -73,6 +75,7 @@ public boolean isSussess;
 
 
 
+
         Button makePhoto;
         Button select;
         image = (ImageView)this.findViewById(R.id.image);
@@ -84,6 +87,8 @@ public boolean isSussess;
 
         txt_flag=(TextView)findViewById(R.id.txt_flag);
 
+        pb_progressbar = (ProgressBar)this.findViewById(R.id.pb_progressbar);
+
 //test
         executorService = Executors.newFixedThreadPool(5);//开启5个线程，其实根据你的情况，一般不会超过8个
 
@@ -91,10 +96,14 @@ public boolean isSussess;
         upload1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 executorService.execute(new Runnable() {
 
                     @Override
                     public void run() {
+
 
                         test_mul.getImageromSdk();
                     }
@@ -107,6 +116,7 @@ public boolean isSussess;
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+
                     handler1=new Handler(){
                         @Override
                         public void handleMessage(Message msg) {
@@ -119,10 +129,12 @@ public boolean isSussess;
                     };
 
                     String str = testUpload();
-
+//                for(int i=0;i<8;i++){
                     mythread_upload=new upload_thread("FileUploadImage",handler1);
                     mythread_upload.setFileUploadImage_str(str);
                     mythread_upload.start();
+                    System.gc();
+//            }
             }
 
 
@@ -148,29 +160,6 @@ public boolean isSussess;
                 return null;
 
             }
-//            private boolean connectWebService(String uploadBuffer) throws IOException {
-//
-//                SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_NAME);
-//                soapObject.addProperty("title", "");
-//                soapObject.addProperty("contect","" );
-//                soapObject.addProperty("bytestr", uploadBuffer);   //参数2  图片字符串
-//                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
-//                envelope.setOutputSoapObject(soapObject);
-//                envelope.bodyOut = soapObject;
-//                envelope.dotNet = true;
-//                envelope.encodingStyle = SoapSerializationEnvelope.ENC;
-//                HttpTransportSE httpTranstation = new HttpTransportSE(URL);
-//                try {
-//                    httpTranstation.call(SOAP_ACTION, envelope);
-//                    return true;
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-//
-//
-//            }
 
         });
 
