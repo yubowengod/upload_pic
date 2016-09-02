@@ -66,15 +66,10 @@ public boolean isSussess;
 
     private ExecutorService executorService;//定义一个线程池
 
-//    test
-//    test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
 
         Button makePhoto;
         Button select;
@@ -89,26 +84,17 @@ public boolean isSussess;
 
         pb_progressbar = (ProgressBar)this.findViewById(R.id.pb_progressbar);
 
-//test
         executorService = Executors.newFixedThreadPool(5);//开启5个线程，其实根据你的情况，一般不会超过8个
-
 
         upload1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
                 executorService.execute(new Runnable() {
-
                     @Override
                     public void run() {
-
-
                         test_mul.getImageromSdk();
                     }
                 });
-
             }
         });
 
@@ -129,20 +115,17 @@ public boolean isSussess;
                     };
 
                     String str = testUpload();
-//                for(int i=0;i<8;i++){
                     mythread_upload=new upload_thread("FileUploadImage",handler1);
                     mythread_upload.setFileUploadImage_str(str);
                     mythread_upload.start();
                     System.gc();
-//            }
             }
 
 
             public String testUpload(){
                 try{
 
-                    String srcUrl =PhotoName; //"/mnt/sdcard/"; //路径
-                    //String fileName = PhotoName+".jpg";  //文件名
+                    String srcUrl =PhotoName;
                     FileInputStream fis = new FileInputStream(srcUrl);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     byte[] buffer = new byte[8192];
@@ -156,11 +139,8 @@ public boolean isSussess;
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-                //return soapObject;
                 return null;
-
             }
-
         });
 
 
@@ -175,7 +155,6 @@ public boolean isSussess;
                 Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
                 getAlbum.setType(IMAGE_TYPE);
                 startActivityForResult(getAlbum, IMAGE_CODE);
-
             }
 
         });
@@ -195,10 +174,7 @@ public boolean isSussess;
                 int second=ca.get(Calendar.SECOND);//秒
                 String fileName=String.valueOf(year)+String.valueOf(month)+String.valueOf(day)+String.valueOf(hour)+String.valueOf(minute)+String.valueOf(second);
                 PhotoName="/mnt/sdcard/"+String.valueOf(year)+String.valueOf(month)+String.valueOf(day)+String.valueOf(hour)+String.valueOf(minute)+String.valueOf(second)+".jpg";
-
-
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment
                         .getExternalStorageDirectory(),fileName+".jpg")));
                 startActivityForResult(intent, 1);
@@ -206,10 +182,6 @@ public boolean isSussess;
 
 
         });
-
-
-
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -217,16 +189,12 @@ public boolean isSussess;
             return;
         }
         if (requestCode == IMAGE_CODE) {
-
-
             try {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
                 Cursor cursor = getContentResolver().query(selectedImage,
                         filePathColumn, null, null, null);
                 cursor.moveToFirst();
-
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String picturePath = cursor.getString(columnIndex);
                 //  text.setText(picturePath);
@@ -239,10 +207,5 @@ public boolean isSussess;
             }
         }
     }
-
-
-
-
-
 }
 
